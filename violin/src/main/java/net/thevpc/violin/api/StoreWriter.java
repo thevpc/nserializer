@@ -1,9 +1,12 @@
 package net.thevpc.violin.api;
 
+import net.thevpc.nuts.util.NMsg;
 import net.thevpc.violin.model.StoreStructId;
 
 import java.io.Closeable;
 import java.util.Collection;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public interface StoreWriter extends Closeable {
 
@@ -24,4 +27,5 @@ public interface StoreWriter extends Closeable {
     StoreWriter addStructs(Collection<StoreStructId> pred);
 
     void close() ;
+
 }

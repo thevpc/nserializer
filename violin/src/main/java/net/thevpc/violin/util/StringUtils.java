@@ -13,10 +13,6 @@ import java.util.regex.Pattern;
  */
 public class StringUtils {
 
-    public static boolean isBlank(String s) {
-        return s == null || s.trim().length() == 0;
-    }
-
     public static String litString(Object s) {
         if (s == null) {
             return "null";

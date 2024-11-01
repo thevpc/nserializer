@@ -1,5 +1,6 @@
 package net.thevpc.violin.impl;
 
+import net.thevpc.nuts.util.NMsg;
 import net.thevpc.violin.api.StoreProgressMonitor;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.List;
 public class StoreProgressMonitorHelper implements StoreProgressMonitor {
     public static final StoreProgressMonitor SILIENT = new StoreProgressMonitor() {
         @Override
-        public void onProgress(double progress, String message) {
+        public void onProgress(double progress, NMsg message) {
 
         }
     };
@@ -26,7 +27,7 @@ public class StoreProgressMonitorHelper implements StoreProgressMonitor {
         }else{
             mon =new StoreProgressMonitor() {
                 @Override
-                public void onProgress(double progress, String message) {
+                public void onProgress(double progress, NMsg message) {
                     for (StoreProgressMonitor mon : mons) {
                         mon.onProgress(progress, message);
                     }
@@ -36,7 +37,7 @@ public class StoreProgressMonitorHelper implements StoreProgressMonitor {
     }
 
     @Override
-    public void onProgress(double progress, String message) {
+    public void onProgress(double progress, NMsg message) {
         mon.onProgress(progress, message);
     }
 }

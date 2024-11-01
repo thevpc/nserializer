@@ -1,5 +1,7 @@
 package net.thevpc.violin.impl;
 
+import net.thevpc.nuts.util.NMsg;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +68,7 @@ public class IOLoggerHelper {
         IOLogger[] _all = all.toArray(new IOLogger[0]);
         curr = new IOLogger() {
             @Override
-            public void log(String msg) {
+            public void log(NMsg msg) {
                 for (IOLogger i : _all) {
                     i.log(msg);
                 }

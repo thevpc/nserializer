@@ -2,6 +2,7 @@ package net.thevpc.violin.model;
 
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;
@@ -17,126 +18,126 @@ public class DefaultStoreValue implements StoreValue {
     }
 
     public static StoreValue ofDocument(StoreDocument value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.DOCUMENT, value);
     }
 
     public static StoreValue ofJavaObject(Object value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.JAVA_OBJECT, value);
     }
 
     public static StoreValue ofInputStream(InputStream value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.BYTE_STREAM, value);
     }
 
     public static StoreValue ofBytes(byte[] value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.BYTES, value);
     }
 
     public static StoreValue ofReader(Reader value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.CHAR_STREAM, value);
     }
 
     public static StoreValue ofString(String value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.STRING, value);
     }
 
     public static StoreValue ofBigInt(BigInteger value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.BIG_INT, value);
     }
 
     public static StoreValue ofBigDecimal(BigDecimal value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.BIG_DECIMAL, value);
     }
 
     public static StoreValue ofDouble(Double value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.DOUBLE, value);
     }
 
     public static StoreValue ofSqlTimestamp(Timestamp value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.TIMESTAMP, value);
     }
 
     public static StoreValue ofSqlDate(java.sql.Date value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.DATE, value);
     }
 
     public static StoreValue ofSqlTime(java.sql.Time value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.TIME, value);
     }
 
     public static StoreValue ofFloat(Float value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.FLOAT, value);
     }
 
     public static StoreValue ofLong(Long value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.LONG, value);
     }
 
     public static StoreValue ofByte(Byte value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.BYTE, value);
     }
 
     public static StoreValue ofInt(Integer value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.INT, value);
     }
 
     public static StoreValue ofBoolean(Boolean value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.BOOLEAN, value);
     }
 
     public static StoreValue ofShort(Short value) {
-        if(value==null){
+        if (value == null) {
             return ofNull();
         }
         return new DefaultStoreValue(StoreDataType.SHORT, value);
@@ -148,7 +149,7 @@ public class DefaultStoreValue implements StoreValue {
     }
 
     public static StoreValue ofAny(StoreDataType fType, Object object) {
-        if(object==null){
+        if (object == null) {
             return ofNull();
         }
         switch (fType) {
@@ -189,11 +190,19 @@ public class DefaultStoreValue implements StoreValue {
             case NSTRING:
                 return ofString((String) object);
             case BYTE_STREAM:
-            case NBYTE_STREAM:
+            case NBYTE_STREAM: {
+                if (object instanceof byte[]) {
+                    return ofBytes((byte[]) object);
+                }
                 return ofInputStream((InputStream) object);
+            }
             case CHAR_STREAM:
-            case NCHAR_STREAM:
+            case NCHAR_STREAM: {
+                if (object instanceof char[]) {
+                    return ofReader(new StringReader(new String((char[]) object)));
+                }
                 return ofReader((Reader) object);
+            }
             case DOCUMENT:
             case NDOCUMENT:
                 return ofDocument((StoreDocument) object);

@@ -1,13 +1,18 @@
 package net.thevpc.violin.impl;
 
+import net.thevpc.nuts.util.NMsg;
 import net.thevpc.violin.api.StoreProgressMonitor;
 import net.thevpc.violin.api.StoreWriter;
 import net.thevpc.violin.model.StoreStructId;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public abstract class AbstractStoreWriter implements StoreWriter {
@@ -16,6 +21,7 @@ public abstract class AbstractStoreWriter implements StoreWriter {
     private long maxRows = -1;
     private LinkedHashSet<StoreStructId> structs = new LinkedHashSet<>();
     private StoreProgressMonitorHelper mon = new StoreProgressMonitorHelper();
+    private Logger LOG;
 
     public boolean isCompress() {
         return compress;
@@ -62,12 +68,23 @@ public abstract class AbstractStoreWriter implements StoreWriter {
         return this;
     }
 
-    protected void incProgress(long[] indexHolder, long max, String message) {
+    protected void incProgress(long[] indexHolder, long max, NMsg message) {
         indexHolder[0]++;
-        mon.onProgress(indexHolder[0] * 100.0 / max, message);
+        double progress = indexHolder[0] * 100.0 / max;
+        mon.onProgress(progress, message);
+        doLog(NMsg.ofC("[%s%s] %s",new DecimalFormat("00.0").format(progress),"%",message));
     }
 
     protected LinkedHashSet<StoreStructId> getStructs() {
         return structs;
+    }
+
+    protected void doLog(NMsg msg){
+        if(LOG==null){
+            LOG=Logger.getLogger(getClass().getName());
+        }
+        Level level = msg.getLevel();
+        LOG.log(level==null?Level.FINE : level, msg::toString);
+        IOLogger.current().log(msg);
     }
 }

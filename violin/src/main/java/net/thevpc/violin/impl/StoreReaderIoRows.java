@@ -1,5 +1,6 @@
 package net.thevpc.violin.impl;
 
+import net.thevpc.nuts.util.NMsg;
 import net.thevpc.violin.api.IoRow;
 import net.thevpc.violin.api.StoreInputStream;
 import net.thevpc.violin.model.StoreStructDefinition;
@@ -32,7 +33,7 @@ public class StoreReaderIoRows extends AbstractStoreRows {
             return null;
         }
         rowIndex++;
-        IOLogger.current().log("Reading row " + rowIndex);
+        IOLogger.current().log(NMsg.ofC("Reading row %s",rowIndex));
         return new StoreReaderIoRow(md, dis);
     }
 

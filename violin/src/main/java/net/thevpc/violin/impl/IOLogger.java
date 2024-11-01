@@ -1,9 +1,11 @@
 package net.thevpc.violin.impl;
 
+import net.thevpc.nuts.util.NMsg;
+
 public interface IOLogger {
     IOLogger NOP = new IOLogger() {
         @Override
-        public void log(String msg) {
+        public void log(NMsg msg) {
         }
     };
 
@@ -25,7 +27,7 @@ public interface IOLogger {
         }
     }
 
-    void log(String msg);
+    void log(NMsg msg);
 
     static IOLogger current() {
         return IOLoggerHelper.get().current();

@@ -259,7 +259,11 @@ public class StoreOutputStreamImpl implements StoreOutputStream {
             writeNullPrefix();
         } else {
             writeNonNullPrefix();
-            ObjectWriter<T> u = (ObjectWriter<T>) sers.getObjectWriter(clazz).get();
+            Optional<ObjectWriter<T>> objectWriter = sers.getObjectWriter(clazz);
+            if(!objectWriter.isPresent()){
+                throw new IllegalArgumentException("Missing Object Writer for "+clazz);
+            }
+            ObjectWriter<T> u = (ObjectWriter<T>) objectWriter.get();
             u.write(value, this);
         }
     }

@@ -1,5 +1,6 @@
 package net.thevpc.violin.impl;
 
+import net.thevpc.nuts.util.NMsg;
 import net.thevpc.violin.api.IoRow;
 import net.thevpc.violin.model.StoreStructDefinition;
 
@@ -21,7 +22,7 @@ public class DefaultStoreRows extends AbstractStoreRows {
     @Override
     public IoRow nextRow() {
         if (index < rows.length) {
-            IOLogger.current().log("Reading row "+(index+1)+" / "+rows.length);
+            IOLogger.current().log(NMsg.ofC("Reading row %s / %s",(index+1),rows.length));
             IoRow c = new DefaultIoRow(def, rows[index]);
             index++;
             return c;
