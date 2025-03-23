@@ -54,8 +54,8 @@ public class StoreWriterImpl extends AbstractStoreWriter {
             boolean compress = isCompress();
             doLog(NMsg.ofC("write header (compress=%s)",compress).asFine());
             StoreOutputStream hos = new StoreOutputStreamImpl(out0, sers);
-            hos.writeNonNullableLong(DietProtocol.BURST);
-            hos.writeNonNullableLong(DietProtocol.V1);
+            hos.writeNonNullableLong(NSerializerProtocol.BURST);
+            hos.writeNonNullableLong(NSerializerProtocol.V1);
             hos.writeNonNullableLong(System.currentTimeMillis());
             hos.writeNonNullableBoolean(compress);
             if (compress) {
@@ -77,7 +77,7 @@ public class StoreWriterImpl extends AbstractStoreWriter {
         long[] currProgress = {0};
         writeHeader();
         doLog(NMsg.ofC("[SECTION_SCHEMA] write section schema").asFine());
-        this.startSection(DietProtocol.SECTION_SCHEMA);
+        this.startSection(NSerializerProtocol.SECTION_SCHEMA);
         List<StoreStructDefinition> tablesMd = new ArrayList<>();
         for (StoreStructId table : getStructs()) {
             StoreStructDefinition definition = db.getDefinition(table);
@@ -96,7 +96,7 @@ public class StoreWriterImpl extends AbstractStoreWriter {
         if (isData()) {
             incProgress(currProgress, maxProgress, NMsg.ofC("Write Data"));
             for (StoreStructDefinition tableMd : tablesMd) {
-                this.startSection(DietProtocol.SECTION_DATA);
+                this.startSection(NSerializerProtocol.SECTION_DATA);
                 if(getMaxRows()>0) {
                     doLog(NMsg.ofC("[%s] start section data (limit %s)", tableMd.toStoreStructId().getFullName(), getMaxRows()).asFine());
                 }else{
@@ -108,7 +108,7 @@ public class StoreWriterImpl extends AbstractStoreWriter {
                 incProgress(currProgress, maxProgress, NMsg.ofC("Write Data for %s", tableMd.toStoreStructId().getFullName()));
             }
         }
-        this.startSection(DietProtocol.STORE_END);
+        this.startSection(NSerializerProtocol.STORE_END);
         this.flush();
         incProgress(currProgress, maxProgress, NMsg.ofC("End"));
         return this;

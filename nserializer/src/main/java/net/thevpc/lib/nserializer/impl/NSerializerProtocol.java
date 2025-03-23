@@ -8,7 +8,7 @@ package net.thevpc.lib.nserializer.impl;
  *
  * @author vpc
  */
-public class DietProtocol {
+public class NSerializerProtocol {
 
     public static final long BURST = 2023111404390000001L;
     public static final int SECTION_HEADER = 1;

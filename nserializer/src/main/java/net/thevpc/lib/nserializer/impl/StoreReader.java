@@ -40,7 +40,7 @@ public class StoreReader implements Closeable {
         this.in = in;
         StoreInputStream his = new StoreInputStreamImpl(in, new Sers());
         long burst = his.readNonNullableLong();
-        if (burst != DietProtocol.BURST) {
+        if (burst != NSerializerProtocol.BURST) {
             throw new UncheckedIOException(new IOException("invalid format"));
         }
         long version = his.readNonNullableLong();
@@ -68,12 +68,12 @@ public class StoreReader implements Closeable {
     public void visit(StoreVisitor visitor) {
         while (true) {
             switch (dis.readNonNullableInt()) {
-                case DietProtocol.SECTION_SCHEMA: {
+                case NSerializerProtocol.SECTION_SCHEMA: {
                     StoreStructDefinition[] md = dis.readNonNullableStruct(StoreStructDefinition[].class);
                     visitor.visitSchema(md==null?null: Arrays.asList(md));
                     break;
                 }
-                case DietProtocol.SECTION_DATA: {
+                case NSerializerProtocol.SECTION_DATA: {
                     try(StoreRows md = dis.readNonNullableStruct(StoreRows.class)) {
                         visitor.visitData(md);
                     }catch (RuntimeException ex){
@@ -81,7 +81,7 @@ public class StoreReader implements Closeable {
                     }
                     break;
                 }
-                case DietProtocol.STORE_END: {
+                case NSerializerProtocol.STORE_END: {
                     visitor.visitEnd();
                     return;
                 }
