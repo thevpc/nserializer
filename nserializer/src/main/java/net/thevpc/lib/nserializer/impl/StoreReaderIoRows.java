@@ -1,5 +1,6 @@
 package net.thevpc.lib.nserializer.impl;
 
+import net.thevpc.lib.nserializer.api.IOLogger;
 import net.thevpc.nuts.util.NMsg;
 import net.thevpc.lib.nserializer.api.IoRow;
 import net.thevpc.lib.nserializer.api.StoreInputStream;
@@ -33,7 +34,7 @@ public class StoreReaderIoRows extends AbstractStoreRows {
             return null;
         }
         rowIndex++;
-        IOLogger.current().log(NMsg.ofC("Reading row %s",rowIndex));
+        IOLogger.get().log(NMsg.ofC("Reading row %s",rowIndex));
         return new StoreReaderIoRow(md, dis);
     }
 

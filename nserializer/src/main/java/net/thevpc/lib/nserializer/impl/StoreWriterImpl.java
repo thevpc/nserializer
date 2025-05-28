@@ -4,10 +4,7 @@
  */
 package net.thevpc.lib.nserializer.impl;
 
-import net.thevpc.lib.nserializer.api.StoreOutputStream;
-import net.thevpc.lib.nserializer.api.StoreRows;
-import net.thevpc.lib.nserializer.api.StoreWriter;
-import net.thevpc.lib.nserializer.api.StoreWriterModel;
+import net.thevpc.lib.nserializer.api.*;
 import net.thevpc.nuts.util.NMsg;
 import net.thevpc.lib.nserializer.model.StoreStructDefinition;
 import net.thevpc.lib.nserializer.model.StoreStructId;
@@ -41,7 +38,7 @@ public class StoreWriterImpl extends AbstractStoreWriter {
         this.db = db;
         this.sers = StoreReaderConf.get(version);
         try {
-            doLog(NMsg.ofC("writing to %s ...", out).asFine());
+            IOLogger.get().log(NMsg.ofC("writing to %s ...", out).asFine());
             this.out0 = new FileOutputStream(out);
         } catch (FileNotFoundException e) {
             throw new UncheckedIOException(e);
@@ -52,7 +49,7 @@ public class StoreWriterImpl extends AbstractStoreWriter {
     private void writeHeader() {
         try {
             boolean compress = isCompress();
-            doLog(NMsg.ofC("write header (compress=%s)",compress).asFine());
+            IOLogger.get().log(NMsg.ofC("write header (compress=%s)",compress).asFine());
             StoreOutputStream hos = new StoreOutputStreamImpl(out0, sers);
             hos.writeNonNullableLong(NSerializerProtocol.BURST);
             hos.writeNonNullableLong(NSerializerProtocol.V1);
@@ -76,7 +73,7 @@ public class StoreWriterImpl extends AbstractStoreWriter {
         long maxProgress = 0;
         long[] currProgress = {0};
         writeHeader();
-        doLog(NMsg.ofC("[SECTION_SCHEMA] write section schema").asFine());
+        IOLogger.get().log(NMsg.ofC("[SECTION_SCHEMA] write section schema").asFine());
         this.startSection(NSerializerProtocol.SECTION_SCHEMA);
         List<StoreStructDefinition> tablesMd = new ArrayList<>();
         for (StoreStructId table : getStructs()) {
@@ -89,7 +86,7 @@ public class StoreWriterImpl extends AbstractStoreWriter {
         maxProgress = (isData() ? (1 + tablesMd.size()) : 0) + 3;
         incProgress(currProgress, maxProgress, NMsg.ofC("[SECTION_SCHEMA] write schema for %s tables",tablesMd.size()).asFine());
         for (StoreStructDefinition storeTableDefinition : tablesMd) {
-            doLog(NMsg.ofC("[SECTION_SCHEMA] %s (%s columns)", storeTableDefinition.toStoreStructId().getFullName(),storeTableDefinition.getColumns().size()).asFine());
+            IOLogger.get().log(NMsg.ofC("[SECTION_SCHEMA] %s (%s columns)", storeTableDefinition.toStoreStructId().getFullName(),storeTableDefinition.getColumns().size()).asFine());
         }
         incProgress(currProgress, maxProgress, NMsg.ofC("Write Definitions"));
         dos.writeNonNullableStruct(StoreStructDefinition[].class, tablesMd.toArray(new StoreStructDefinition[0]));
@@ -98,9 +95,9 @@ public class StoreWriterImpl extends AbstractStoreWriter {
             for (StoreStructDefinition tableMd : tablesMd) {
                 this.startSection(NSerializerProtocol.SECTION_DATA);
                 if(getMaxRows()>0) {
-                    doLog(NMsg.ofC("[%s] start section data (limit %s)", tableMd.toStoreStructId().getFullName(), getMaxRows()).asFine());
+                    IOLogger.get().log(NMsg.ofC("[%s] start section data (limit %s)", tableMd.toStoreStructId().getFullName(), getMaxRows()).asFine());
                 }else{
-                    doLog(NMsg.ofC("[%s] start section data", tableMd.toStoreStructId().getFullName()).asFine());
+                    IOLogger.get().log(NMsg.ofC("[%s] start section data", tableMd.toStoreStructId().getFullName()).asFine());
                 }
                 try (StoreRows rs = db.getRows(tableMd.toStoreStructId())) {
                     dos.writeNonNullableStruct(StoreRows.class, rs.limit(getMaxRows()));

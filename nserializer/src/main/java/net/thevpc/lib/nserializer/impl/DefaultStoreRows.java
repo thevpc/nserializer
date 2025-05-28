@@ -1,5 +1,6 @@
 package net.thevpc.lib.nserializer.impl;
 
+import net.thevpc.lib.nserializer.api.IOLogger;
 import net.thevpc.nuts.util.NMsg;
 import net.thevpc.lib.nserializer.api.IoRow;
 import net.thevpc.lib.nserializer.model.StoreStructDefinition;
@@ -22,7 +23,7 @@ public class DefaultStoreRows extends AbstractStoreRows {
     @Override
     public IoRow nextRow() {
         if (index < rows.length) {
-            IOLogger.current().log(NMsg.ofC("Reading row %s / %s",(index+1),rows.length));
+            IOLogger.get().log(NMsg.ofC("Reading row %s / %s",(index+1),rows.length));
             IoRow c = new DefaultIoRow(def, rows[index]);
             index++;
             return c;

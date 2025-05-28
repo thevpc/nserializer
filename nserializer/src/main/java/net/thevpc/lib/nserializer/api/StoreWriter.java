@@ -21,8 +21,9 @@ public interface StoreWriter extends Closeable {
     StoreWriter setCompress(boolean compress);
 
     StoreWriter addStructs(StoreStructId... pred);
+
     StoreWriter addStructs(Collection<StoreStructId> pred);
 
-    void close() ;
+    void close();
 
 }

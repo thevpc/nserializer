@@ -1,5 +1,6 @@
 package net.thevpc.lib.nserializer.impl;
 
+import net.thevpc.lib.nserializer.api.IOLogger;
 import net.thevpc.nuts.util.NMsg;
 import net.thevpc.lib.nserializer.api.StoreProgressMonitor;
 import net.thevpc.lib.nserializer.api.StoreWriter;
@@ -71,19 +72,19 @@ public abstract class AbstractStoreWriter implements StoreWriter {
         indexHolder[0]++;
         double progress = indexHolder[0] * 100.0 / max;
         mon.onProgress(progress, message);
-        doLog(NMsg.ofC("[%s%s] %s",new DecimalFormat("00.0").format(progress),"%",message));
+        IOLogger.get().log(NMsg.ofC("[%s%s] %s",new DecimalFormat("00.0").format(progress),"%",message));
     }
 
     protected LinkedHashSet<StoreStructId> getStructs() {
         return structs;
     }
 
-    protected void doLog(NMsg msg){
-        if(LOG==null){
-            LOG=Logger.getLogger(getClass().getName());
-        }
-        Level level = msg.getLevel();
-        LOG.log(level==null?Level.FINE : level, msg::toString);
-        IOLogger.current().log(msg);
-    }
+//    protected void doLog(NMsg msg){
+//        if(LOG==null){
+//            LOG=Logger.getLogger(getClass().getName());
+//        }
+//        Level level = msg.getLevel();
+//        LOG.log(level==null?Level.FINE : level, msg::toString);
+//        IOLogger.get().log(msg);
+//    }
 }
