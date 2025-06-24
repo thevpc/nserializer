@@ -10,6 +10,7 @@ import net.thevpc.lib.nserializer.model.StoreDataType;
 import net.thevpc.lib.nserializer.model.StoreDocument;
 import net.thevpc.lib.nserializer.model.StoreDocumentEntry;
 import net.thevpc.lib.nserializer.model.StoreValue;
+import net.thevpc.lib.nserializer.util.StringUtils;
 
 import java.io.*;
 import java.lang.reflect.Array;
@@ -180,6 +181,9 @@ public class StoreOutputStreamImpl implements StoreOutputStream {
                         writeNullableBigDecimal((BigDecimal) value);
                         break;
                     }
+                    default:{
+                        throw new IllegalArgumentException("unsupported "+clazz.getName());
+                    }
                 }
             }
         }
@@ -280,7 +284,7 @@ public class StoreOutputStreamImpl implements StoreOutputStream {
 
     @Override
     public void writeNonNullableString(String str) {
-        if (getUTFLength(str) <= 0xFFFFL) {
+        if (StringUtils.getUTFLength(str) <= 0xFFFFL) {
             this.writeNonNullableByte(1);
             this.writeUTF(str);
         } else {
@@ -298,36 +302,6 @@ public class StoreOutputStreamImpl implements StoreOutputStream {
             writeNonNullPrefix();
             this.writeNonNullableString(str);
         }
-    }
-
-    /**
-     * //FROM JDK!!! ObjectOutputStream
-     *
-     * @param s
-     * @return
-     */
-    @Override
-    public long getUTFLength(String s) {
-        int CHAR_BUF_SIZE = 256;
-        char[] cbuf = new char[CHAR_BUF_SIZE];
-        int len = s.length();
-        long utflen = 0;
-        for (int off = 0; off < len; ) {
-            int csize = Math.min(len - off, CHAR_BUF_SIZE);
-            s.getChars(off, off + csize, cbuf, 0);
-            for (int cpos = 0; cpos < csize; cpos++) {
-                char c = cbuf[cpos];
-                if (c >= 0x0001 && c <= 0x007F) {
-                    utflen++;
-                } else if (c > 0x07FF) {
-                    utflen += 3;
-                } else {
-                    utflen += 2;
-                }
-            }
-            off += csize;
-        }
-        return utflen;
     }
 
     @Override
