@@ -47,8 +47,6 @@ public interface StoreOutputStream extends Closeable {
 
     void writeNullableString(String str);
 
-    long getUTFLength(String s);
-
     void writeNull();
 
     void writeNullableBoolean(Boolean v);
@@ -105,7 +103,7 @@ public interface StoreOutputStream extends Closeable {
 
     void writeRawBytes(byte[] b);
 
-    void writeRawBytes(byte b[], int off, int len);
+    void writeRawBytes(byte[] b, int off, int len);
 
     void writeNonNullableInputStream(InputStream v);
 

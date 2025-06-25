@@ -12,7 +12,34 @@ import java.util.regex.Pattern;
  * @author vpc
  */
 public class StringUtils {
-
+    /**
+     * //FROM JDK!!! ObjectOutputStream
+     *
+     * @param s
+     * @return
+     */
+    public static long getUTFLength(String s) {
+        int CHAR_BUF_SIZE = 256;
+        char[] cbuf = new char[CHAR_BUF_SIZE];
+        int len = s.length();
+        long utflen = 0;
+        for (int off = 0; off < len; ) {
+            int csize = Math.min(len - off, CHAR_BUF_SIZE);
+            s.getChars(off, off + csize, cbuf, 0);
+            for (int cpos = 0; cpos < csize; cpos++) {
+                char c = cbuf[cpos];
+                if (c >= 0x0001 && c <= 0x007F) {
+                    utflen++;
+                } else if (c > 0x07FF) {
+                    utflen += 3;
+                } else {
+                    utflen += 2;
+                }
+            }
+            off += csize;
+        }
+        return utflen;
+    }
     public static String litString(Object s) {
         if (s == null) {
             return "null";
@@ -61,58 +88,4 @@ public class StringUtils {
         }
         return "\"" + s + "\"";
     }
-
-//    public static Pattern glob(String s, boolean caseSensitive) {
-//        if (s == null || s.length() == 0) {
-//            return Pattern.compile(".*");
-//        }
-//        StringBuilder sb = new StringBuilder();
-//        for (char c : s.toCharArray()) {
-//            switch (c) {
-//                case '*': {
-//                    sb.append(".*");
-//                    break;
-//                }
-//                case '?': {
-//                    sb.append(".");
-//                    break;
-//                }
-//                case '+':
-//                case '.':
-//                case '[':
-//                case ']':
-//                case '(':
-//                case ')': {
-//                    sb.append("\\").append(c);
-//                    break;
-//                }
-//                default: {
-//                    sb.append(c);
-//                }
-//            }
-//        }
-//        if (caseSensitive) {
-//            return Pattern.compile(sb.toString());
-//        } else {
-//            return Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
-//        }
-//    }
-//
-//    public static String emptyIfNull(String s) {
-//        if (s == null) {
-//            return "";
-//        }
-//        return s;
-//    }
-//
-//    public static String trimToNull(String s) {
-//        if (s == null) {
-//            return null;
-//        }
-//        s = s.trim();
-//        if (s.isEmpty()) {
-//            return null;
-//        }
-//        return s;
-//    }
 }
