@@ -1,7 +1,7 @@
 package net.thevpc.lib.nserializer.impl;
 
 import net.thevpc.lib.nserializer.api.IOLogger;
-import net.thevpc.nuts.util.NMsg;
+import net.thevpc.nuts.text.NMsg;
 import net.thevpc.lib.nserializer.api.StoreProgressMonitor;
 import net.thevpc.lib.nserializer.api.StoreWriter;
 import net.thevpc.lib.nserializer.model.StoreStructId;
@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
