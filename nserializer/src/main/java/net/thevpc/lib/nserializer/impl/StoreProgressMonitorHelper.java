@@ -1,6 +1,6 @@
 package net.thevpc.lib.nserializer.impl;
 
-import net.thevpc.nuts.util.NMsg;
+import net.thevpc.nuts.text.NMsg;
 import net.thevpc.lib.nserializer.api.StoreProgressMonitor;
 
 import java.util.ArrayList;
