@@ -5,7 +5,7 @@
 package net.thevpc.lib.nserializer.impl;
 
 import net.thevpc.lib.nserializer.api.*;
-import net.thevpc.nuts.util.NMsg;
+import net.thevpc.nuts.text.NMsg;
 import net.thevpc.lib.nserializer.model.StoreStructDefinition;
 import net.thevpc.lib.nserializer.model.StoreStructId;
 
