@@ -1,7 +1,7 @@
 package net.thevpc.lib.nserializer.impl;
 
 import net.thevpc.lib.nserializer.api.IOLogger;
-import net.thevpc.nuts.util.NMsg;
+import net.thevpc.nuts.text.NMsg;
 import net.thevpc.lib.nserializer.api.IoRow;
 import net.thevpc.lib.nserializer.api.StoreInputStream;
 import net.thevpc.lib.nserializer.model.StoreStructDefinition;
