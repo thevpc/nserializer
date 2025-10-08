@@ -1,7 +1,7 @@
 package net.thevpc.lib.nserializer.api;
 
 import net.thevpc.lib.nserializer.impl.IOLoggerNodes;
-import net.thevpc.nuts.util.NMsg;
+import net.thevpc.nuts.text.NMsg;
 
 public interface IOLogger {
     IOLogger NOP = new IOLogger() {
