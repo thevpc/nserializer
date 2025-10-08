@@ -2,7 +2,7 @@ package net.thevpc.lib.nserializer.impl;
 
 import net.thevpc.lib.nserializer.api.IOLogger;
 import net.thevpc.lib.nserializer.api.IOLoggerNode;
-import net.thevpc.nuts.util.NMsg;
+import net.thevpc.nuts.text.NMsg;
 
 import java.util.List;
 import java.util.concurrent.Callable;
