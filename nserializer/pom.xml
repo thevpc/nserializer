@@ -3,7 +3,7 @@
     <groupId>net.thevpc.nserializer</groupId>
     <artifactId>nserializer</artifactId>
     <description>Versatile Input Output Library Inherently Naive</description>
-    <version>0.8.7.0</version>
+    <version>0.8.8.0</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
