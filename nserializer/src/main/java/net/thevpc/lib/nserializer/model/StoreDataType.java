@@ -64,7 +64,7 @@ public enum StoreDataType {
     }
 
     public static StoreDataType of(StoreDataTypeBase base, boolean nullable) {
-        NAssert.requireNonNull(base, "base");
+        NAssert.requireNamedNonNull(base, "base");
         switch (base) {
             case INT:
                 return nullable ? INT : NINT;
