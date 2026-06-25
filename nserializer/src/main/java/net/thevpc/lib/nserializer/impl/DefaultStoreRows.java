@@ -23,7 +23,7 @@ public class DefaultStoreRows extends AbstractStoreRows {
     @Override
     public IoRow nextRow() {
         if (index < rows.length) {
-            IOLogger.get().log(NMsg.ofC("Reading row %s / %s",(index+1),rows.length));
+            IOLogger.get().log(NMsg.ofC("Reading row %s / %s",(index+1),rows.length).asInfo());
             IoRow c = new DefaultIoRow(def, rows[index]);
             index++;
             return c;

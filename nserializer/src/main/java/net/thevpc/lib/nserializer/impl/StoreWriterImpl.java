@@ -38,7 +38,7 @@ public class StoreWriterImpl extends AbstractStoreWriter {
         this.db = db;
         this.sers = StoreReaderConf.get(version);
         try {
-            IOLogger.get().log(NMsg.ofC("writing to %s ...", out).asFine());
+            IOLogger.get().log(NMsg.ofC("writing to %s ...", out).asInfo());
             this.out0 = new FileOutputStream(out);
         } catch (FileNotFoundException e) {
             throw new UncheckedIOException(e);
@@ -88,10 +88,10 @@ public class StoreWriterImpl extends AbstractStoreWriter {
         for (StoreStructDefinition storeTableDefinition : tablesMd) {
             IOLogger.get().log(NMsg.ofC("[SECTION_SCHEMA] %s (%s columns)", storeTableDefinition.toStoreStructId().getFullName(),storeTableDefinition.getColumns().size()).asFine());
         }
-        incProgress(currProgress, maxProgress, NMsg.ofC("Write Definitions"));
+        incProgress(currProgress, maxProgress, NMsg.ofC("Write Definitions").asFine());
         dos.writeNonNullableStruct(StoreStructDefinition[].class, tablesMd.toArray(new StoreStructDefinition[0]));
         if (isData()) {
-            incProgress(currProgress, maxProgress, NMsg.ofC("Write Data"));
+            incProgress(currProgress, maxProgress, NMsg.ofC("Write Data").asFine());
             for (StoreStructDefinition tableMd : tablesMd) {
                 this.startSection(NSerializerProtocol.SECTION_DATA);
                 if(getMaxRows()>0) {
@@ -99,15 +99,30 @@ public class StoreWriterImpl extends AbstractStoreWriter {
                 }else{
                     IOLogger.get().log(NMsg.ofC("[%s] start section data", tableMd.toStoreStructId().getFullName()).asFine());
                 }
-                try (StoreRows rs = db.getRows(tableMd.toStoreStructId())) {
+                StoreRows rs =null;
+                boolean startedWriting=false;
+                try{
+                    rs = db.getRows(tableMd.toStoreStructId());
+                    startedWriting=true;
                     dos.writeNonNullableStruct(StoreRows.class, rs.limit(getMaxRows()));
+                }catch (Exception ex){
+                    if(!startedWriting){
+//                        System.out.println(NMsg.ofC("Unable to read %s : %s", tableMd.toStoreStructId().getFullName(),ex).asError());
+                        incProgress(currProgress, maxProgress, NMsg.ofC("Unable to read %s : %s", tableMd.toStoreStructId().getFullName(),ex).asError());
+                        return this;
+                    }
+                    throw ex;
+                }finally {
+                    if(rs!=null){
+                        rs.close();
+                    }
                 }
-                incProgress(currProgress, maxProgress, NMsg.ofC("Write Data for %s", tableMd.toStoreStructId().getFullName()));
+                incProgress(currProgress, maxProgress, NMsg.ofC("Write Data for %s", tableMd.toStoreStructId().getFullName()).asInfo());
             }
         }
         this.startSection(NSerializerProtocol.STORE_END);
         this.flush();
-        incProgress(currProgress, maxProgress, NMsg.ofC("End"));
+        incProgress(currProgress, maxProgress, NMsg.ofC("End").asFine());
         return this;
     }
 

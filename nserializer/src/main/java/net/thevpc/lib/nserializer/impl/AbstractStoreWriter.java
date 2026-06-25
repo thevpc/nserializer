@@ -71,7 +71,7 @@ public abstract class AbstractStoreWriter implements StoreWriter {
         indexHolder[0]++;
         double progress = indexHolder[0] * 100.0 / max;
         mon.onProgress(progress, message);
-        IOLogger.get().log(NMsg.ofC("[%s%s] %s",new DecimalFormat("00.0").format(progress),"%",message));
+        IOLogger.get().log(NMsg.ofC("[%s%s] %s",new DecimalFormat("00.0").format(progress),"%",message).withLevel(message.level()));
     }
 
     protected LinkedHashSet<StoreStructId> getStructs() {

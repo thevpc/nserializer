@@ -2,24 +2,28 @@ package net.thevpc.lib.nserializer.impl;
 
 import net.thevpc.lib.nserializer.api.IOLogger;
 import net.thevpc.lib.nserializer.api.IOLoggerNode;
+import net.thevpc.nuts.io.NErr;
+import net.thevpc.nuts.io.NOut;
 import net.thevpc.nuts.text.NMsg;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
 
 public class IOLoggerNodes {
     private static ThreadLocal<IOLoggerNode> current = new ThreadLocal<>();
     public  static void set(IOLoggerNode c){
-        current.set(c==null?NULL:c);
+        current.set(c==null?DEFAULT:c);
     }
     public  static IOLoggerNode get(){
         IOLoggerNode t = current.get();
-        return t==null?NULL:t;
+        return t==null?DEFAULT:t;
     }
     public static final IOLoggerNode NULL=new IOLoggerNodeNull();
+    public static final IOLoggerNode DEFAULT=new IOLoggerNodeDefault();
     public static IOLoggerNode of(IOLogger... li) {
         if(li==null){
-            return NULL;
+            return DEFAULT;
         }
         List<IOLoggerNode> all=new java.util.ArrayList<>();
         for (IOLogger a : li) {
@@ -34,7 +38,7 @@ public class IOLoggerNodes {
             }
         }
         if(all.isEmpty()){
-            return NULL;
+            return DEFAULT;
         }
         if(all.size()==1){
             return all.get(0);
@@ -44,7 +48,7 @@ public class IOLoggerNodes {
 
     public static IOLoggerNode of(IOLogger a) {
         if (a == null) {
-            return NULL;
+            return DEFAULT;
         }
         if (a instanceof IOLoggerNode) {
             return (IOLoggerNode) a;
@@ -92,6 +96,28 @@ public class IOLoggerNodes {
 
         @Override
         public void log(NMsg msg) {
+        }
+    }
+
+    private static class IOLoggerNodeDefault extends AbstractIOLoggerNode {
+        public IOLoggerNodeDefault() {
+        }
+
+        @Override
+        public void log(NMsg msg) {
+            if(msg!=null){
+                Level l = msg.level();
+                if(l==null){
+                    l=Level.INFO;
+                }
+                if(l.intValue()>=Level.WARNING.intValue()){
+                    NErr.println(msg.toString());
+                    return;
+                }
+                if(l.intValue()>=Level.INFO.intValue()){
+                    NOut.println(msg.toString());
+                }
+            }
         }
     }
 
@@ -148,7 +174,7 @@ public class IOLoggerNodes {
                 all.add(of(other));
             }
             if(all.isEmpty()){
-                return NULL;
+                return DEFAULT;
             }
             if(all.size()==1){
                 return all.get(0);
