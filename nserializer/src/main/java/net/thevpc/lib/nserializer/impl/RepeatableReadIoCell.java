@@ -24,6 +24,7 @@ public class RepeatableReadIoCell extends AbstractIoCell {
             InputStream is = (InputStream) o;
             try {
                 tempFile = File.createTempFile("RepeatableReadIoCell-", ".temp");
+                tempFile.deleteOnExit();
                 try (FileOutputStream fos = new FileOutputStream(tempFile)) {
                     byte[] buffer = new byte[4092];
                     int c;
@@ -46,6 +47,7 @@ public class RepeatableReadIoCell extends AbstractIoCell {
             Reader is = (Reader) o;
             try {
                 tempFile = File.createTempFile("RepeatableReadIoCell-", ".temp");
+                tempFile.deleteOnExit();
                 strValue=tempFile.toString();
                 try (Writer fos = new FileWriter(tempFile)) {
                     char[] buffer = new char[4092];
